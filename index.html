@@ -1805,7 +1805,15 @@ const CLASS_BUILDS = {
         ],
       },
     ],
-    alt: [],
+    alt: [
+      {
+        name: "Tanky Hybrid",
+        desc: "You can tank, you can heal, you can whack things until they die.",
+        phases: [
+          { label:"Talents", url:"https://www.wowhead.com/classic/talent-calc/paladin/50450100501-0532012-05005030202/0ADf2BEJgggM0ccccJm1BCDggf" },
+        ],
+      },
+    ],
   },
 
   "Hunter": {
@@ -1970,7 +1978,14 @@ const CLASS_BUILDS = {
         name: "Fire",
         desc: "Fireball crits and Combustion carnage.",
         phases: [
-          { label:"Talents", url:"https://www.wowhead.com/classic/talent-calc/mage/230005021--05253203102351051/2ccBFdHdjPqdddNssstss0bbbAF2ME0jhh" },
+          { label:"Talents", url:"https://www.wowhead.com/classic/talent-calc/mage/230105031003-5052000123033151-002/2cc1ADccchJccNkkqPkRs0bbbAFjHdN" },
+        ],
+      },
+      {
+        name: "Frost-Fire",
+        desc: "Hybrid caster blending Fire burst with Frost control.",
+        phases: [
+          { label:"Talents", url:"https://www.wowhead.com/classic/talent-calc/mage/-5252010120033151-2031023013005/2C1AChDJNbbq2AFGjKdP1PfRs" },
         ],
       },
     ],
@@ -2009,7 +2024,16 @@ const CLASS_BUILDS = {
         ],
       },
     ],
-    alt: [],
+    alt: [
+      {
+        name: "No-Form Druid",
+        desc: "Pure Balance and Restoration — no shapeshifting at all.",
+        noChallenges: true,
+        phases: [
+          { label:"Talents", url:"https://www.wowhead.com/classic/talent-calc/druid/500055031225135--5500031/0AFjHkNQp2ABFg0eReeeekmm" },
+        ],
+      },
+    ],
   },
 };
 
@@ -2613,7 +2637,7 @@ async function startRoll() {
   // Special builds override self-found, dungeons, challenges
   const selfFound   = build.isSpecial ? (build.selfFound || false) : rollSelfFound();
   const professions = rollProfessions(chosenClass, build);
-  const challenges  = (build.isSpecial) ? [] : rollChallenges(selfFound, build.isAlt, build.name);
+  const challenges  = (build.isSpecial || build.noChallenges) ? [] : rollChallenges(selfFound, build.isAlt, build.name);
   const dungeons    = (build.isSpecial && build.zeroDungeons) ? [] : rollDungeons(race, challenges);
 
   const isIronman  = challenges.some(c => c.id === "ironman");
