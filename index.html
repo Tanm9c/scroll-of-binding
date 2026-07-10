@@ -1336,6 +1336,34 @@
 
       <div class="faq-section-title" style="display:flex;align-items:center;gap:0.6rem;">
         <span class="rules-tag rules-tag-addon" style="font-size:0.65rem;">Web App</span>
+        v0.2.2 &mdash; July 10, 2026
+      </div>
+      <div class="faq-q" style="margin-top:0.6rem;">Dungeon Rules Rewritten</div>
+      <ul class="rules-list">
+        <li><strong>Updated &mdash; Dungeon system.</strong> Assigned dungeons are now a required checklist, not an exclusive allow-list. Non-assigned dungeons are fully unrestricted — run whatever you want, whenever you want, with zero effect on your decree.</li>
+        <li><strong>New &mdash; Outlevel failure.</strong> Each required boss must still grant XP when you kill it. Leveling past that point without clearing it ends the run, checked independently per boss — one missed Scarlet Monastery or Maraudon wing fails the run even if your other assigned dungeons are still valid.</li>
+        <li><strong>New &mdash; Outlevel warning.</strong> You'll get an in-game reminder a few levels out from a required boss going grey, repeating at every level-up after that until it's cleared.</li>
+        <li>Rules and FAQ copy updated to reflect the above.</li>
+      </ul>
+
+      <div class="faq-rule"></div>
+
+      <div class="faq-section-title" style="display:flex;align-items:center;gap:0.6rem;">
+        <span class="rules-tag rules-tag-research" style="font-size:0.65rem;">Addon</span>
+        v0.1.1-alpha &mdash; July 10, 2026
+      </div>
+      <div class="faq-q" style="margin-top:0.6rem;">Dungeon Rework, Minimap Fix, UI Polish</div>
+      <ul class="rules-list">
+        <li><strong>Reworked &mdash; Dungeon tracking.</strong> Removed the rule that failed a run for any kill inside a non-assigned dungeon. Added outlevel-failure and an advance-warning nudge for required bosses, checked on both login and level-up to catch offline leveling.</li>
+        <li><strong>Fixed &mdash; Minimap button.</strong> Replaced the hand-rolled minimap icon with the standard LibDataBroker + LibDBIcon libraries, fixing the oversized mouseover highlight and missing border.</li>
+        <li><strong>Fixed &mdash; Dungeon completion icons.</strong> Completed/failed status in the Dungeons tab now uses Blizzard's ready-check icons instead of Unicode characters, which rendered as a blank colored box on the default UI font.</li>
+        <li><strong>Fixed &mdash; SavedVariables migration.</strong> Table-type run data could be shared by reference across characters during a version migration instead of being copied; now deep-copied correctly.</li>
+      </ul>
+
+      <div class="faq-rule"></div>
+
+      <div class="faq-section-title" style="display:flex;align-items:center;gap:0.6rem;">
+        <span class="rules-tag rules-tag-addon" style="font-size:0.65rem;">Web App</span>
         v0.2.1 &mdash; July 7, 2026
       </div>
       <div class="faq-q" style="margin-top:0.6rem;">Talent Build Additions & Fix</div>
@@ -1548,9 +1576,9 @@
 
       <div class="faq-rule"></div>
       <div class="faq-section-title">Dungeons</div>
-      <div class="faq-a">Your decree assigns a list of dungeons drawn from your faction's available pool. The purpose of this list is to vary your run with each attempt — forcing you into level ranges and zones you might otherwise skip, and requiring you to compensate through questing in areas you wouldn't normally prioritize when a dungeon falls outside your assigned list.</div>
-      <div class="faq-a" style="margin-top:0.5rem;">You are required to complete every assigned dungeon. Completion means killing the final boss while they still grant experience — the kill must occur before the boss goes grey to your character. Scarlet Monastery counts as four separate completions (one per wing). Maraudon counts as three (one per wing).</div>
-      <div class="faq-a" style="margin-top:0.5rem;">Entering any dungeon not on your assigned list and participating in any kill — including trash — triggers an immediate permanent run failure. The addon monitors this at all times.</div>
+      <div class="faq-a">Your decree assigns a specific list of dungeons (and, for Scarlet Monastery and Maraudon, specific wings) that you're required to clear before level 60. You're free to run any other dungeon for XP, quests, or gear — there's no penalty for stepping outside your assigned list.</div>
+      <div class="faq-a" style="margin-top:0.5rem;">The catch: each assigned dungeon's final boss must still grant XP when you kill it. Scarlet Monastery counts as four separate completions (one per wing); Maraudon counts as three (one per wing). If you level past the point where a required boss stops granting XP without clearing it, your run ends — evaluated per boss, so outleveling even one uncleared wing fails the run even if your other assigned dungeons are still valid.</div>
+      <div class="faq-a" style="margin-top:0.5rem;">You'll get a warning a few levels out from that cutoff, and again at every level-up after that, so you always know when a dungeon is about to slip away.</div>
 
     </div>
   </div>
@@ -1626,10 +1654,16 @@
       <div class="faq-a">The scroll assigns a randomized list drawn from your faction's available pool. Faction matters — some dungeons are off-limits entirely, and others are weighted based on whether they're in your faction's territory.</div>
 
       <div class="faq-q">What counts as completing a dungeon?</div>
-      <div class="faq-a">Killing the final boss. Scarlet Monastery and Maraudon each count as multiple completions — one per wing.</div>
+      <div class="faq-a">Killing the final boss while it still grants XP — the kill must land before the boss goes grey to your character. Scarlet Monastery and Maraudon each count as multiple completions — one per wing.</div>
 
-      <div class="faq-q">Can I enter dungeons not on my list?</div>
-      <div class="faq-a">No. Any kill inside a dungeon not on your list — including trash — triggers an immediate permanent run failure. The addon monitors this at all times.</div>
+      <div class="faq-q">Do I have to avoid dungeons that aren't on my list?</div>
+      <div class="faq-a">No. Only your assigned dungeons matter for your run. Run whatever else you want, whenever you want — it has zero effect on your decree.</div>
+
+      <div class="faq-q">What happens if I outlevel one of my assigned dungeons?</div>
+      <div class="faq-a">Your run ends. Each required boss has to still be worth XP when you kill it — once you level past that point, it's gone for good. You'll get an in-game warning starting a few levels before that happens, and again every time you level up after that, so it shouldn't catch you off guard.</div>
+
+      <div class="faq-q">I have Scarlet Monastery or Maraudon assigned — does outleveling one wing fail my whole run?</div>
+      <div class="faq-a">Yes. Each required wing/boss is tracked separately, so letting any single one slip past its XP window ends the run, even if your other assigned dungeons are still fine.</div>
 
       <div class="faq-rule"></div>
       <div class="faq-section-title">The Addon</div>
