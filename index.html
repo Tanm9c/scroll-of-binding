@@ -414,6 +414,26 @@
     background: linear-gradient(160deg, rgba(26,58,92,0.1) 0%, rgba(15,35,55,0.05) 100%);
   }
 
+  /* Burn-transform: an already-revealed card changing into something
+     else (Mode -> Self-Found via Self-Sufficient, Professions -> No
+     Professions). Not used for a card's first reveal. */
+  @keyframes cardBurnTransform {
+    0%   { filter: brightness(1) saturate(1);     transform: scale(1);    box-shadow: 0 0 0 rgba(192,57,43,0); }
+    30%  { filter: brightness(1.5) saturate(1.7) hue-rotate(-8deg); transform: scale(1.02); box-shadow: 0 0 26px rgba(192,57,43,0.55); }
+    65%  { filter: brightness(0.55) saturate(1.9); transform: scale(0.97); box-shadow: 0 0 18px rgba(192,57,43,0.4); }
+    100% { filter: brightness(0.9) saturate(1);    transform: scale(0.96); opacity: 0.12; box-shadow: 0 0 0 rgba(192,57,43,0); }
+  }
+  .card.card-burning {
+    animation: cardBurnTransform 0.7s ease-in-out forwards;
+  }
+  @keyframes cardReforgeIn {
+    0%   { opacity: 0.12; transform: scale(0.94); }
+    100% { opacity: 1;    transform: scale(1); }
+  }
+  .card.card-reforged {
+    animation: cardReforgeIn 0.5s ease-out forwards;
+  }
+
   /* Blood text for ironman / double challenge */
   .card.card-blood .card-value,
   .card.card-blood .card-label {
@@ -1336,6 +1356,19 @@
 
       <div class="faq-section-title" style="display:flex;align-items:center;gap:0.6rem;">
         <span class="rules-tag rules-tag-addon" style="font-size:0.65rem;">Web App</span>
+        v0.2.3 &mdash; July 11, 2026
+      </div>
+      <div class="faq-q" style="margin-top:0.6rem;">Self-Sufficient Forces Self-Found &middot; New Burn Reveals</div>
+      <ul class="rules-list">
+        <li><strong>Updated &mdash; Self-Sufficient.</strong> Now forces Self-Found mode on whenever it's rolled and Self-Found wasn't already active. If your Mode card already revealed as Standard, watch it burn and reforge into Self-Found once the Self-Sufficient card appears.</li>
+        <li><strong>New &mdash; No Professions burn reveal.</strong> Your Professions card still reveals your rolled professions first — then, if No Professions is decreed, it burns away and reforges to show "No Professions" instead.</li>
+        <li>Rules and FAQ copy updated to reflect the above.</li>
+      </ul>
+
+      <div class="faq-rule"></div>
+
+      <div class="faq-section-title" style="display:flex;align-items:center;gap:0.6rem;">
+        <span class="rules-tag rules-tag-addon" style="font-size:0.65rem;">Web App</span>
         v0.2.2 &mdash; July 10, 2026
       </div>
       <div class="faq-q" style="margin-top:0.6rem;">Dungeon Rules Rewritten</div>
@@ -1482,6 +1515,7 @@
         <li>No Auction House purchases</li>
         <li>No gear bought from vendors</li>
         <li>Vendor food and water are permitted to be purchased from vendors — no consumables</li>
+        <li>Forces Self-Found mode on for the duration of your run, if it wasn't already active</li>
       </ul>
 
       <div class="faq-q">Teetotaler <span class="rules-tag rules-tag-addon">Addon Enforced</span></div>
@@ -1520,6 +1554,7 @@
         <li>All eleven banned: Herbalism, Mining, Skinning, Blacksmithing, Tailoring, Leatherworking, Enchanting, Alchemy, First Aid, Cooking, Fishing</li>
         <li>Rogue Lockpicking is a class mechanic, not a profession — it is unaffected</li>
         <li>Cannot roll alongside the Kamisayo Speedrun Build</li>
+        <li>Your Professions card still reveals a rolled combination first, then burns into "No Professions" — the rolled professions shown beforehand carry no weight once this challenge is decreed</li>
       </ul>
 
       <div class="faq-q">No World Buffs <span class="rules-tag rules-tag-addon">Addon Enforced</span></div>
@@ -1628,6 +1663,9 @@
       <div class="faq-q">Can I use the vendor?</div>
       <div class="faq-a">Yes. Vendors are fine. Self-Found restricts player-to-player economy only.</div>
 
+      <div class="faq-q">Why did my roll show Standard Mode, then change to Self-Found?</div>
+      <div class="faq-a">Self-Sufficient forces Self-Found on, since relying purely on your own drops and crafting is the whole point of that challenge. If Self-Found wasn't already active when Self-Sufficient rolled, the scroll shows you the Mode card as Standard first, then burns and reforges it into Self-Found once Self-Sufficient reveals — the final result is always Self-Found, whichever order the cards showed it in.</div>
+
       <div class="faq-rule"></div>
       <div class="faq-section-title">Challenges</div>
 
@@ -1637,7 +1675,7 @@
       <div class="faq-q">What are the challenges?</div>
       <div class="faq-a"><strong>Ironman</strong> — No talents, white or grey gear only, no enchants, no grouping. Cannot be stacked with any other challenge.<br>
       <strong>Teetotaler</strong> — No consumable buffs of any kind. No elixirs, flasks, scrolls, potions, food buffs, or weapon oils. Cannot be stacked with any other challenge.<br>
-      <strong>Self-Sufficient</strong> — Only gear you crafted or personally found. No AH, no vendor gear.<br>
+      <strong>Self-Sufficient</strong> — Only gear you crafted or personally found. No AH, no vendor gear. Forces Self-Found mode on if it wasn't already active.<br>
       <strong>No Professions</strong> — No primary or secondary professions may be learned. Cannot roll with the Kamisayo build.<br>
       <strong>No World Buffs</strong> — No world buffs active when entering combat. A 10-second grace window applies to involuntary application.<br>
       <strong>No Hearthstone</strong> — No Hearthstone, no Unstuck. Walk everywhere.<br>
@@ -1646,6 +1684,9 @@
 
       <div class="faq-q">Are challenges enforced?</div>
       <div class="faq-a">All challenges are tracked by the addon. Ironman, Teetotaler, No Professions, No World Buffs, Face Your Death, and No Mounts are enforced automatically. Self-Sufficient, No Hearthstone, and No Mounts enforcement is partially automated — the addon monitors where it can and flags violations; some edge cases are accepted as undetectable.</div>
+
+      <div class="faq-q">Why did my Professions card show real professions, then burn into "No Professions"?</div>
+      <div class="faq-a">The scroll still rolls a profession combination first and reveals it normally — then, if No Professions is decreed, that card burns away and reforges to show "No Professions" instead. The professions shown beforehand don't matter once this happens; No Professions bans all eleven regardless of what was rolled.</div>
 
       <div class="faq-rule"></div>
       <div class="faq-section-title">Dungeons</div>
@@ -2114,7 +2155,7 @@ const PROFESSION_COMBOS = [
 const CHALLENGES = [
   { id:"ironman",        name:"Ironman",           icon:"⚔️", desc:"No talents. White or grey gear only. No enchants. No grouping.",                                          tier:1, weight:1, verifiable:true,  exclusive:["all"] },
   { id:"teetotaler",     name:"Teetotaler",        icon:"🍶", desc:"No consumable buffs. No elixirs, flasks, scrolls, potions, food buffs, or weapon oils.",                  tier:1, weight:1, verifiable:true,  exclusive:["all"] },
-  { id:"self_sufficient",name:"Self-Sufficient",   icon:"🌿", desc:"Only gear you crafted or found. No AH, no vendor gear.",                                                  tier:2, weight:2, verifiable:true,  exclusive:["self_found"] },
+  { id:"self_sufficient",name:"Self-Sufficient",   icon:"🌿", desc:"Only gear you crafted or found. No AH, no vendor gear. Forces Self-Found mode.",         tier:2, weight:2, verifiable:true,  exclusive:[] },
   { id:"no_professions", name:"No Professions",    icon:"🔧", desc:"No primary or secondary professions may be learned for the duration of your run.",                        tier:2, weight:2, verifiable:true,  exclusive:[] },
   { id:"no_world_buffs", name:"No World Buffs",    icon:"🚫", desc:"No world buffs active when entering combat. A 10-second grace window applies to involuntary application.",tier:3, weight:3, verifiable:true,  exclusive:[] },
   { id:"no_hearthstone", name:"No Hearthstone",    icon:"🪨", desc:"No Hearthstone and no Unstuck. Travel everywhere on foot.",                                               tier:3, weight:3, verifiable:true,  exclusive:[] },
@@ -2241,7 +2282,7 @@ function rollProfessions(className, build) {
 function rollChallenges(isSelfFound, hasAltBuild, buildName) {
   const selected = [];
   const exclusions = new Set();
-  if (isSelfFound) { exclusions.add("self_sufficient"); exclusions.add("ironman"); }
+  if (isSelfFound) { exclusions.add("ironman"); }
 
   // No Professions cannot roll with Kamisayo build
   if (buildName === "Kamisayo") { exclusions.add("no_professions"); }
@@ -2573,9 +2614,8 @@ const MODE_OPEN_ICON     = wowIcon("inv_misc_key_06");      // open key = standa
 const NO_CHALLENGE_ICON  = wowIcon("spell_holy_serenity");
 const PROFESSIONS_ICON   = wowIcon("inv_misc_wrench_01");   // tools
 
-function createCard(config) {
-  const card = document.createElement("div");
-  card.className = "card" + (config.extra ? " " + config.extra : "");
+function populateCardContent(card, config) {
+  card.innerHTML = "";
 
   const iconEl = document.createElement("div");
   iconEl.className = "card-icon";
@@ -2614,7 +2654,43 @@ function createCard(config) {
 
   card.appendChild(iconEl);
   card.appendChild(content);
+}
+
+function createCard(config) {
+  const card = document.createElement("div");
+  card.className = "card" + (config.extra ? " " + config.extra : "");
+  populateCardContent(card, config);
   return card;
+}
+
+// ============================================================
+// CARD TRANSFORM (burn a previously-revealed card into something else)
+// Used when a later-rolled challenge changes the meaning of a card
+// that already revealed earlier in the sequence — Self-Sufficient
+// forcing Self-Found (the Mode card), and No Professions overriding
+// the rolled professions (the Professions card). Not used for any
+// card's first reveal — see revealCard for that.
+// ============================================================
+async function transformCardBurn(cardEl, newConfig, momentConfig) {
+  const skip = document.getElementById("skipAnim").checked;
+
+  if (skip) {
+    cardEl.className = "card" + (newConfig.extra ? " " + newConfig.extra : "");
+    populateCardContent(cardEl, newConfig);
+    return;
+  }
+
+  if (momentConfig) await showMoment(momentConfig);
+
+  cardEl.classList.add("card-burning");
+  sfx.fire();
+  await sleep(700);
+
+  cardEl.className = "card" + (newConfig.extra ? " " + newConfig.extra : "") + " card-reforged";
+  populateCardContent(cardEl, newConfig);
+  sfx.cardReveal();
+  await sleep(500);
+  cardEl.classList.remove("card-reforged");
 }
 
 // ============================================================
@@ -2695,10 +2771,17 @@ async function startRoll() {
   const build       = rollBuild(chosenClass);
 
   // Special builds override self-found, dungeons, challenges
-  const selfFound   = build.isSpecial ? (build.selfFound || false) : rollSelfFound();
+  const originalSelfFound = build.isSpecial ? (build.selfFound || false) : rollSelfFound();
   const professions = rollProfessions(chosenClass, build);
-  const challenges  = (build.isSpecial || build.noChallenges) ? [] : rollChallenges(selfFound, build.isAlt, build.name);
+  const challenges  = (build.isSpecial || build.noChallenges) ? [] : rollChallenges(originalSelfFound, build.isAlt, build.name);
   const dungeons    = (build.isSpecial && build.zeroDungeons) ? [] : rollDungeons(race, challenges);
+
+  // Self-Sufficient always forces Self-Found on if it wasn't already
+  // rolled true — special builds are exempt (they fix selfFound
+  // directly and never roll challenges in the first place).
+  const forcesSelfFound = challenges.some(c => c.id === "self_sufficient") && !originalSelfFound;
+  const selfFound        = originalSelfFound || forcesSelfFound;
+  const hasNoProfessions = challenges.some(c => c.id === "no_professions");
 
   const isIronman  = challenges.some(c => c.id === "ironman");
   const isDouble   = challenges.length > 1;
@@ -2757,7 +2840,11 @@ async function startRoll() {
   }), build.isSpecial ? "ember" : build.isAlt ? "ember" : null);
 
   // ── 5. SELF-FOUND ──
-  if (selfFound) {
+  // Reveals using originalSelfFound — if Self-Sufficient later forces
+  // Self-Found on, this card correctly shows "Standard" first and is
+  // transformed afterward in the challenge loop below.
+  let modeCardEl;
+  if (originalSelfFound) {
     if (!skip) {
       await showMoment({
         glyph:  "🔒",
@@ -2766,27 +2853,34 @@ async function startRoll() {
         result: "Self-Found Mode",
       });
     }
-    await revealCard(createCard({
+    modeCardEl = createCard({
       icon:  MODE_LOCKED_ICON,
       label: "Mode",
       value: "Self-Found",
       sub:   "No AH · No trading · No player mail",
       extra: "card-selffound",
-    }), "frost");
+    });
+    await revealCard(modeCardEl, "frost");
   } else {
-    await revealCard(createCard({
+    modeCardEl = createCard({
       icon:  MODE_OPEN_ICON,
       label: "Mode",
       value: "Standard",
       sub:   "The scroll places no economic burden upon you. The Auction House awaits, should fortune favour you.",
-    }), null);
+    });
+    await revealCard(modeCardEl, null);
   }
-  await revealCard(createCard({
+  // ── 6. PROFESSIONS ──
+  // Reveals the actually-rolled professions regardless of No
+  // Professions — if that challenge is active, this card is burned
+  // into "No Professions" afterward in the challenge loop below.
+  const professionsCardEl = createCard({
     icon:  PROFESSION_ICONS[professions[0]] || PROFESSIONS_ICON,
     label: "Professions",
     value: professions.join(" & "),
     sub:   "Primary professions",
-  }), null);
+  });
+  await revealCard(professionsCardEl, null);
 
   // ── 7. CHALLENGES ──
   if (challenges.length === 0) {
@@ -2839,6 +2933,40 @@ async function startRoll() {
         sub:   challenge.desc,
         extra: (isChalIron || isDouble ? "card-blood" : "card-challenge"),
       }), disturbance);
+
+      // Self-Sufficient forcing Self-Found — burn the Mode card from
+      // Standard into Self-Found now that its own card has revealed.
+      if (challenge.id === "self_sufficient" && forcesSelfFound) {
+        await transformCardBurn(modeCardEl, {
+          icon:  MODE_LOCKED_ICON,
+          label: "Mode",
+          value: "Self-Found",
+          sub:   "No AH · No trading · No player mail",
+          extra: "card-selffound",
+        }, {
+          glyph:  "🔥",
+          title:  "Total Self-Reliance",
+          body:   "A self-sufficient path leaves no room for outside aid. The scroll seals your economy to match.",
+          result: "Standard Mode → Self-Found Mode",
+        });
+      }
+
+      // No Professions — burn the Professions card into "No Professions"
+      // now that its own card has revealed.
+      if (challenge.id === "no_professions") {
+        await transformCardBurn(professionsCardEl, {
+          icon:  CHALLENGE_ICONS["no_professions"] || PROFESSIONS_ICON,
+          label: "Professions",
+          value: "No Professions",
+          sub:   "No primary or secondary professions may be learned",
+          extra: "card-challenge",
+        }, {
+          glyph:  "🔥",
+          title:  "Your Trade Burns Away",
+          body:   "Whatever craft the scroll once granted you is undone. No profession — primary or secondary — may be learned.",
+          result: "No Professions",
+        });
+      }
     }
   }
 
@@ -2865,7 +2993,7 @@ async function startRoll() {
   }
 
   // ── SAVE & SUMMARY ──
-  currentResult = { race, gender, faction, chosenClass, build, selfFound, professions, challenges, dungeons };
+  currentResult = { race, gender, faction, chosenClass, build, selfFound, forcedSelfFound: forcesSelfFound, professions, challenges, dungeons };
   localStorage.setItem("scrollOfBinding_lastRoll", JSON.stringify(currentResult));
 
   hideTapHint();
@@ -2911,7 +3039,8 @@ function buildSummary(result) {
   add("Class",       result.chosenClass,                         "highlight");
   add("Build",       result.build.name + (result.build.isAlt ? " ✦" : ""), result.build.isAlt ? "highlight" : "");
   add("Mode",        result.selfFound ? "🔒 Self-Found" : "Standard", result.selfFound ? "nature" : "");
-  add("Professions", result.professions.join(" & "),             "");
+  const hasNoProfessions = result.challenges.some(c => c.id === "no_professions");
+  add("Professions", hasNoProfessions ? "🔧 No Professions" : result.professions.join(" & "), hasNoProfessions ? "danger" : "");
 
   if (result.challenges.length > 0) {
     const challengeCls = isIronman || isDouble ? "blood" : "danger";
@@ -2974,7 +3103,11 @@ function buildAllCards(result) {
     cards.push(createCard({ icon:MODE_OPEN_ICON, label:"Mode", value:"Standard", sub:"The scroll places no economic burden upon you. The Auction House awaits, should fortune favour you." }));
   }
 
-  cards.push(createCard({ icon:PROFESSION_ICONS[professions[0]]||PROFESSIONS_ICON, label:"Professions", value:professions.join(" & "), sub:"Primary professions" }));
+  if (challenges.some(c => c.id === "no_professions")) {
+    cards.push(createCard({ icon:CHALLENGE_ICONS["no_professions"]||PROFESSIONS_ICON, label:"Professions", value:"No Professions", sub:"No primary or secondary professions may be learned", extra:"card-challenge" }));
+  } else {
+    cards.push(createCard({ icon:PROFESSION_ICONS[professions[0]]||PROFESSIONS_ICON, label:"Professions", value:professions.join(" & "), sub:"Primary professions" }));
+  }
 
   if (challenges.length === 0) {
     cards.push(createCard({ icon:NO_CHALLENGE_ICON, label:"Challenge", value:"None", sub:"The scroll demands no additional trials — you got off easy" }));
@@ -3026,6 +3159,8 @@ async function replayRoll() {
 
   const result = currentResult;
   const { race, gender, faction, chosenClass, build, selfFound, professions, challenges, dungeons } = result;
+  const forcesSelfFound   = !!result.forcedSelfFound;
+  const originalSelfFound = forcesSelfFound ? false : selfFound;
   const isIronman      = challenges.some(c => c.id === "ironman");
   const isDouble       = challenges.length > 1;
   const hasRareDungeon = dungeons.some(d => d.rareFaction);
@@ -3046,14 +3181,18 @@ async function replayRoll() {
     : build.isAlt ? ` <span class="card-badge badge-alt">Alt Build</span>` : "";
   await revealCard(createCard({ icon:BUILD_ICON, label:"Build", value:build.name+buildBadge, sub:buildCardSub(build), extra:(build.isSpecial||build.isAlt)?"card-special":"" }), (build.isSpecial||build.isAlt)?"ember":null);
 
-  if (selfFound) {
+  let modeCardEl;
+  if (originalSelfFound) {
     if (!skip) await showMoment({ glyph:"🔒", title:"The Scroll Seals Your Economy", body:"No Auction House. No trading. No mail with other players.", result:"Self-Found Mode" });
-    await revealCard(createCard({ icon:MODE_LOCKED_ICON, label:"Mode", value:"Self-Found", sub:"No AH · No trading · No player mail", extra:"card-selffound" }), "frost");
+    modeCardEl = createCard({ icon:MODE_LOCKED_ICON, label:"Mode", value:"Self-Found", sub:"No AH · No trading · No player mail", extra:"card-selffound" });
+    await revealCard(modeCardEl, "frost");
   } else {
-    await revealCard(createCard({ icon:MODE_OPEN_ICON, label:"Mode", value:"Standard", sub:"The scroll places no economic burden upon you. The Auction House awaits, should fortune favour you." }), null);
+    modeCardEl = createCard({ icon:MODE_OPEN_ICON, label:"Mode", value:"Standard", sub:"The scroll places no economic burden upon you. The Auction House awaits, should fortune favour you." });
+    await revealCard(modeCardEl, null);
   }
 
-  await revealCard(createCard({ icon:PROFESSION_ICONS[professions[0]]||PROFESSIONS_ICON, label:"Professions", value:professions.join(" & "), sub:"Primary professions" }), null);
+  const professionsCardEl = createCard({ icon:PROFESSION_ICONS[professions[0]]||PROFESSIONS_ICON, label:"Professions", value:professions.join(" & "), sub:"Primary professions" });
+  await revealCard(professionsCardEl, null);
 
   if (challenges.length === 0) {
     if (!skip) {
@@ -3081,6 +3220,21 @@ async function replayRoll() {
         value:ch.name+(isChalIron?` <span class="card-badge badge-iron">Ironman</span>`:isDouble?` <span class="card-badge badge-rare">Rare Stack</span>`:""),
         sub:ch.desc, extra:(isChalIron||isDouble?"card-blood":"card-challenge"),
       }), isChalIron?"demonic":isDouble?"inferno":"fire");
+
+      if (ch.id === "self_sufficient" && forcesSelfFound) {
+        await transformCardBurn(modeCardEl, {
+          icon:  MODE_LOCKED_ICON, label:"Mode", value:"Self-Found", sub:"No AH · No trading · No player mail", extra:"card-selffound",
+        }, {
+          glyph: "🔥", title: "Total Self-Reliance", body: "A self-sufficient path leaves no room for outside aid. The scroll seals your economy to match.", result: "Standard Mode → Self-Found Mode",
+        });
+      }
+      if (ch.id === "no_professions") {
+        await transformCardBurn(professionsCardEl, {
+          icon:  CHALLENGE_ICONS["no_professions"] || PROFESSIONS_ICON, label:"Professions", value:"No Professions", sub:"No primary or secondary professions may be learned", extra:"card-challenge",
+        }, {
+          glyph: "🔥", title: "Your Trade Burns Away", body: "Whatever craft the scroll once granted you is undone. No profession — primary or secondary — may be learned.", result: "No Professions",
+        });
+      }
     }
   }
 
@@ -4041,7 +4195,7 @@ function adminRunReveal() {
     if (d) dungeons.push({ name: d.name, abbr: d.abbr, rareFaction: false });
   });
 
-  const result = { race, gender, faction, chosenClass, build, selfFound, professions: [prof1, prof2], challenges, dungeons };
+  const result = { race, gender, faction, chosenClass, build, selfFound: selfFound || challenges.some(c => c.id === "self_sufficient"), professions: [prof1, prof2], challenges, dungeons };
 
   closeAdmin();
 
