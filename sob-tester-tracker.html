@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scroll of Binding — Beta Tester Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment-deep:  #2a1f0e;
+    --parchment-mid:   #c8a96e;
+    --parchment-light: #e8d5a3;
+    --parchment-pale:  #f4ead0;
+    --ink-black:       #1a1108;
+    --ink-brown:       #3d2b0f;
+    --gold-bright:     #c9922a;
+    --gold-tarnished:  #8a6520;
+    --wax-red:         #8b1a1a;
+    --wax-crimson:     #c0392b;
+    --aged-green:      #3d5a3e;
+    --aged-green-bright: #4f7a50;
+    --rune-blue:       #1a3a5c;
+    --shadow:          rgba(20,10,0,0.6);
+    --font-display:    'Cinzel', serif;
+    --font-text:       'Crimson Text', serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background-color: var(--parchment-deep);
+    margin: 0;
+    padding: 2rem 1rem 4rem;
+    font-family: var(--font-text);
+    color: var(--ink-brown);
+  }
+  .page {
+    max-width: 920px;
+    margin: 0 auto;
+    background: linear-gradient(160deg, #ede0b4 0%, #e5d49a 40%, #dcc882 70%, #e8d5a3 100%);
+    border: 2px solid var(--gold-tarnished);
+    border-radius: 4px;
+    padding: 2rem 2.5rem 2.5rem;
+    box-shadow: 0 4px 32px var(--shadow);
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-align: center;
+    margin: 0 0 0.25rem;
+    color: var(--ink-brown);
+  }
+  .subtitle {
+    font-style: italic;
+    color: var(--gold-tarnished);
+    text-align: center;
+    font-size: 0.92rem;
+    margin: 0 0 1rem;
+  }
+  .rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-tarnished), transparent);
+    margin: 1rem 0 1.25rem;
+  }
+
+  /* ---- top toolbar ---- */
+  .toolbar {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  button.tool {
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.3);
+    border: 1px solid var(--gold-tarnished);
+    color: var(--ink-brown);
+    border-radius: 3px;
+    padding: 0.5rem 0.9rem;
+    cursor: pointer;
+  }
+  button.tool:hover { background: rgba(255,255,255,0.5); border-color: var(--gold-bright); }
+  button.tool.primary {
+    background: var(--gold-tarnished);
+    color: var(--parchment-pale);
+  }
+  button.tool.primary:hover { background: var(--gold-bright); }
+
+  /* ---- identity panel ---- */
+  .identity {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(138,101,32,0.35);
+    border-radius: 4px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  .identity h2 {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-tarnished);
+    margin: 0 0 0.75rem;
+  }
+  .identity-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.75rem;
+  }
+  .field label {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-tarnished);
+    margin-bottom: 0.3rem;
+  }
+  .field input[type="text"],
+  .field input[type="number"],
+  .field select {
+    width: 100%;
+    font-family: var(--font-text);
+    font-size: 0.9rem;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(138,101,32,0.4);
+    border-radius: 3px;
+    padding: 0.4rem 0.5rem;
+    color: var(--ink-brown);
+  }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--gold-bright);
+    background: rgba(255,255,255,0.75);
+  }
+  .field.checkbox-field {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-top: 1.2rem;
+  }
+  .field.checkbox-field input { width: 18px; height: 18px; accent-color: var(--gold-tarnished); }
+  .field.checkbox-field label { margin: 0; }
+  .identity-note {
+    font-size: 0.78rem;
+    font-style: italic;
+    color: var(--gold-tarnished);
+    margin-top: 0.6rem;
+  }
+
+  /* ---- progress ---- */
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 10px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid rgba(138,101,32,0.3);
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--aged-green);
+    width: 0%;
+    transition: width 0.25s ease;
+  }
+  .progress-label {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: var(--gold-tarnished);
+    white-space: nowrap;
+  }
+
+  /* ---- sections ---- */
+  .section {
+    border: 1px solid rgba(138,101,32,0.3);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    background: rgba(255,255,255,0.1);
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .section-header:hover { background: rgba(255,255,255,0.12); }
+  .section-title-wrap { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ink-brown);
+  }
+  .section-count {
+    font-size: 0.76rem;
+    color: var(--gold-tarnished);
+    font-style: italic;
+  }
+  .section-caret {
+    font-size: 0.7rem;
+    color: var(--gold-tarnished);
+    transition: transform 0.15s ease;
+  }
+  .section.collapsed .section-caret { transform: rotate(-90deg); }
+  .section-body { padding: 0 1rem 1rem; }
+  .section.collapsed .section-body { display: none; }
+
+  .item {
+    padding: 0.75rem 0;
+    border-top: 1px solid rgba(138,101,32,0.15);
+  }
+  .item:first-child { border-top: none; }
+  .item-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; }
+  .item-label {
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--ink-brown);
+  }
+  .badge-regression {
+    display: inline-block;
+    margin-left: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 0.56rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--aged-green-bright);
+    background: rgba(61,90,62,0.15);
+    border: 1px solid rgba(61,90,62,0.35);
+    border-radius: 2px;
+    padding: 0.1rem 0.4rem;
+    vertical-align: middle;
+  }
+  .item-desc {
+    font-size: 0.82rem;
+    color: var(--gold-tarnished);
+    font-style: italic;
+    margin: 0.2rem 0 0.5rem;
+    line-height: 1.4;
+  }
+
+  .status-group {
+    display: inline-flex;
+    border: 1px solid rgba(138,101,32,0.4);
+    border-radius: 3px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .status-btn {
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.6rem;
+    background: rgba(255,255,255,0.3);
+    color: var(--ink-brown);
+    border: none;
+    border-right: 1px solid rgba(138,101,32,0.3);
+    cursor: pointer;
+  }
+  .status-btn:last-child { border-right: none; }
+  .status-btn:hover { background: rgba(255,255,255,0.55); }
+  .status-btn.active-untested { background: rgba(138,101,32,0.25); color: var(--ink-brown); }
+  .status-btn.active-pass { background: var(--aged-green); color: var(--parchment-pale); }
+  .status-btn.active-fail { background: var(--wax-crimson); color: var(--parchment-pale); }
+
+  .item-fields { margin-top: 0.6rem; display: grid; gap: 0.5rem; }
+  .item-fields.hidden-fields { display: none; }
+  textarea.note {
+    width: 100%;
+    min-height: 44px;
+    resize: vertical;
+    font-family: var(--font-text);
+    font-size: 0.85rem;
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(138,101,32,0.25);
+    border-radius: 3px;
+    padding: 0.4rem 0.55rem;
+    color: var(--ink-brown);
+  }
+  textarea.note.error-field { font-family: monospace; font-size: 0.78rem; }
+  textarea.note::placeholder { color: rgba(61,43,15,0.45); }
+  textarea.note:focus { outline: none; border-color: var(--gold-bright); background: rgba(255,255,255,0.7); }
+  textarea.note.missing { border-color: var(--wax-crimson); background: rgba(192,57,43,0.08); }
+  .field-label {
+    font-family: var(--font-display);
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gold-tarnished);
+    margin-bottom: 0.2rem;
+    display: block;
+  }
+
+  .section-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(138,101,32,0.2);
+  }
+  .section-status-msg { font-size: 0.8rem; font-style: italic; color: var(--gold-tarnished); flex: 1; }
+  .section-status-msg.error { color: var(--wax-crimson); }
+  .section-status-msg.success { color: var(--aged-green-bright); }
+
+  /* ---- modal ---- */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,6,2,0.7);
+    z-index: 100;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 3rem 1rem;
+    overflow-y: auto;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    max-width: 680px;
+    width: 100%;
+    background: linear-gradient(160deg, #ede0b4 0%, #e5d49a 40%, #dcc882 100%);
+    border: 2px solid var(--gold-bright);
+    border-radius: 4px;
+    padding: 1.75rem 2rem 2rem;
+    box-shadow: 0 8px 40px var(--shadow);
+    position: relative;
+  }
+  .modal-close {
+    position: absolute;
+    top: 0.75rem; right: 0.9rem;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    background: none;
+    border: none;
+    color: var(--gold-tarnished);
+    cursor: pointer;
+  }
+  .modal-close:hover { color: var(--wax-crimson); }
+  .modal-box h2 {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--ink-brown);
+    margin: 0 0 0.9rem;
+    letter-spacing: 0.03em;
+  }
+  .modal-box h3 {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-tarnished);
+    margin: 1.3rem 0 0.5rem;
+  }
+  .modal-box p, .modal-box li { font-size: 0.9rem; line-height: 1.55; }
+  .modal-box code {
+    background: rgba(0,0,0,0.08);
+    padding: 0.08rem 0.35rem;
+    border-radius: 2px;
+    font-size: 0.85em;
+    font-family: monospace;
+  }
+  .callout {
+    background: rgba(201,146,42,0.15);
+    border: 1px solid rgba(201,146,42,0.4);
+    border-radius: 3px;
+    padding: 0.7rem 0.9rem;
+    margin: 0.6rem 0 1rem;
+    font-size: 0.88rem;
+  }
+  table.cmd-table { width: 100%; border-collapse: collapse; margin: 0.5rem 0 1rem; }
+  table.cmd-table th, table.cmd-table td {
+    text-align: left;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.82rem;
+    border-bottom: 1px solid rgba(138,101,32,0.2);
+    vertical-align: top;
+  }
+  table.cmd-table th {
+    font-family: var(--font-display);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-tarnished);
+  }
+  table.cmd-table code { white-space: nowrap; }
+  .macro-block {
+    background: rgba(0,0,0,0.08);
+    border-left: 3px solid var(--rune-blue);
+    border-radius: 0 3px 3px 0;
+    padding: 0.6rem 0.8rem;
+    font-family: monospace;
+    font-size: 0.85rem;
+    margin: 0.5rem 0 1rem;
+    white-space: pre-wrap;
+  }
+
+  .save-note {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--gold-tarnished);
+    font-style: italic;
+    margin-top: 1.25rem;
+    min-height: 1rem;
+  }
+
+  @media (max-width: 600px) {
+    .page { padding: 1.5rem 1rem; }
+    .item-top { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Scroll of Binding</h1>
+  <p class="subtitle">Beta tester tracker &mdash; report results as you go</p>
+  <div class="rule"></div>
+
+  <div class="toolbar">
+    <button class="tool primary" id="open-guide">&#128214; How to Test</button>
+    <button class="tool" id="expand-all">Expand all</button>
+    <button class="tool" id="collapse-all">Collapse all</button>
+  </div>
+
+  <div class="identity">
+    <h2>Your Details</h2>
+    <div class="identity-grid">
+      <div class="field">
+        <label for="id-discord">Discord Handle</label>
+        <input type="text" id="id-discord" placeholder="e.g. Trent#0001 or @handle">
+      </div>
+      <div class="field">
+        <label for="id-race">Race</label>
+        <select id="id-race">
+          <option value="">Select&hellip;</option>
+          <option>Human</option><option>Dwarf</option><option>Night Elf</option><option>Gnome</option>
+          <option>Orc</option><option>Undead</option><option>Tauren</option><option>Troll</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="id-class">Class</label>
+        <select id="id-class">
+          <option value="">Select&hellip;</option>
+          <option>Warrior</option><option>Paladin</option><option>Hunter</option><option>Rogue</option>
+          <option>Priest</option><option>Shaman</option><option>Mage</option><option>Warlock</option><option>Druid</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="id-level">Level</label>
+        <input type="number" id="id-level" min="1" max="60" placeholder="e.g. 24">
+      </div>
+      <div class="field checkbox-field">
+        <input type="checkbox" id="id-selffound">
+        <label for="id-selffound">Self-Found run</label>
+      </div>
+    </div>
+    <p class="identity-note">Filled in once &mdash; carried along with every section you submit. Saved in this browser only.</p>
+  </div>
+
+  <div class="progress-wrap">
+    <span class="progress-label" id="progress-text">0 / 0 tested</span>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <div id="sections"></div>
+
+  <p class="save-note" id="save-note">&nbsp;</p>
+</div>
+
+<!-- ================= MODAL ================= -->
+<div class="modal-overlay" id="guide-modal">
+  <div class="modal-box">
+    <button class="modal-close" id="close-guide" aria-label="Close">&#10005;</button>
+    <h2>How to Test</h2>
+
+    <div class="callout">
+      Run <code>/scroll debug</code> first &mdash; it's required for every command below, and it resets every time you log in, so you'll need to redo it each session.
+      <br><br>
+      Turning it on also reveals a checkbox on the addon's Import tab labeled <strong>&ldquo;Debug: allow import despite XP&rdquo;</strong>. Check it if you want to import a decree onto a character that's already leveled (imports are normally blocked once a character has earned XP) &mdash; handy for jumping straight into testing dungeon, talent, or challenge systems without leveling a fresh alt from 1.
+    </div>
+
+    <h3>Commands</h3>
+    <table class="cmd-table">
+      <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>/scroll</code></td><td>Opens the main window</td></tr>
+        <tr><td><code>/scroll debug</code></td><td>Toggles debug mode on/off</td></tr>
+        <tr><td><code>/scroll dump</code></td><td>Prints full run state &mdash; attach to every bug report</td></tr>
+        <tr><td><code>/scroll importcode</code></td><td>Prints a re-import code for your current decree &mdash; attach this too, so we can reproduce your exact decree on a fresh character</td></tr>
+        <tr><td><code>/scroll test*</code><br><span style="font-size:0.75rem;color:var(--gold-tarnished);">(testgroup, testhearth, testdeath, testmount, testworldbuff, testself, testteeto, testfail, testlevel [n])</span></td><td>Simulates the alert/fail <em>message</em> for that challenge only &mdash; confirms the addon can still warn you, does <strong>not</strong> test real detection. Use as a quick sanity check, not a substitute for the real in-game action.</td></tr>
+        <tr><td><code>/scroll resetrun</code></td><td>Wipes this character's run data so you can import a new decree. Destructive &mdash; there's no undo &mdash; but genuinely useful, see below.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Testing Multiple Challenges on One Character</h3>
+    <p>
+      You don't need a fresh character for every challenge. With debug mode on: import a decree for one challenge (say, No Hearthstone), test it, then run <code>/scroll resetrun</code> and import a different single-challenge decree (say, No Mounts) on that same character &mdash; using the XP-bypass checkbox above, since the character isn't level 1 anymore. Repeat as needed to work through several challenges without leveling multiple alts.
+    </p>
+    <p>
+      Just make sure you're actually finished with a challenge before resetting &mdash; <code>/scroll resetrun</code> can't be undone.
+    </p>
+
+    <h3>Suggested Macro</h3>
+    <p>One button, both outputs for a bug report:</p>
+    <div class="macro-block">/scroll dump
+/scroll importcode</div>
+
+    <h3>What to Record</h3>
+    <ul>
+      <li>Did the right chat message or screen alert fire when it should have?</li>
+      <li>Did anything fail that shouldn't have (false positive)? Did anything <em>not</em> fail that should have (false negative &mdash; harder to catch since it's silent, so worth deliberately double-checking)?</li>
+      <li>Any red Lua error text, or anything that looks blank or broken?</li>
+      <li>What you did, in order, and roughly how much time passed between steps.</li>
+    </ul>
+
+    <h3>Catching Errors</h3>
+    <ul>
+      <li><strong>BugGrabber + BugSack</strong> &mdash; BugGrabber catches Lua errors, BugSack gives you a readable log (<code>/bugsack</code>) instead of them scrolling past in red. BugSack requires BugGrabber installed too.</li>
+      <li><strong>!Swatter</strong> &mdash; a companion/alternative to BugSack that pops an error notification you can copy directly.</li>
+      <li><strong>A chat-copy addon</strong> (e.g. Chat Copy Paste) &mdash; WoW's default chat only lets you triple-click one line at a time; this gives a proper copy window for full blocks of text, which matters for the <code>/scroll dump</code> and <code>/scroll importcode</code> output.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CONFIG — set this to your Apps Script Web App deployment URL
+// ============================================================
+const CONFIG = {
+  ENDPOINT_URL: "https://script.google.com/macros/s/AKfycbzDRVZeU3uU3h5ed_SsYXTQNJ5TquMdwzr-r2Nv0uHcgM0CErUOqux7YUzKfY3eRD9U/exec"
+};
+
+// ============================================================
+// DATA — same systems as the internal tracker. "confirmed"
+// marks items already verified in-game by Trent — testers still
+// see and can test them (regression checks across more classes/
+// specs/conditions), just flagged so they know it's lower priority
+// than the unconfirmed items.
+// ============================================================
+const DATA = [
+  {
+    id: "ironman",
+    title: "1. Ironman — group detection",
+    items: [
+      { id: "im-debug", label: "Run /scroll testgroup — a red alert should flash and the alert sound should play twice", desc: "", confirmed: true },
+      { id: "im-decline", label: "Receive a party invite but decline or ignore it — the run should not fail", desc: "", confirmed: true },
+      { id: "im-invite", label: "Accept a real party invite while Ironman is active — the run should fail immediately", desc: "Have a friend or alt account send the invite.", confirmed: true }
+    ]
+  },
+  {
+    id: "hearthstone",
+    title: "2. No Hearthstone",
+    items: [
+      { id: "hs-debug", label: "Run /scroll testhearth — the fail message and alert should appear", desc: "", confirmed: true },
+      { id: "hs-cancel", label: "Start casting Hearthstone, then cancel before it completes — the run should not fail", desc: "", confirmed: true },
+      { id: "hs-complete", label: "Use Hearthstone and let the cast complete — the run should fail", desc: "", confirmed: true }
+    ]
+  },
+  {
+    id: "fyd",
+    title: "3. Face Your Death",
+    items: [
+      { id: "fyd-debug", label: "Run /scroll testdeath — the fail message and alert should appear", desc: "", confirmed: false },
+      { id: "fyd-bagscan", label: "Log in with a banned Face Your Death item already in your bags — no red error text should appear", desc: "This is separate from whether the item warning itself shows correctly — see the next items for that.", confirmed: false },
+      { id: "fyd-flask-possess", label: "Carry a Flask of Petrification in your bags — you should get a warning, but the run should not fail yet", desc: "Item ID 13506, for reference.", confirmed: false },
+      { id: "fyd-flask-drink", label: "Drink a Flask of Petrification — the run should fail", desc: "Buff ID 17624, for reference.", confirmed: false },
+      { id: "fyd-elune-possess", label: "Carry a Light of Elune in your bags — you should get a warning, but the run should not fail yet", desc: "Item ID 5816, for reference.", confirmed: false },
+      { id: "fyd-elune-drink", label: "Use a Light of Elune — the run should fail", desc: "Buff ID 6724, for reference.", confirmed: false },
+      { id: "fyd-livp", label: "If you can get one, test a Limited Invulnerability Potion the same way — carrying it should warn, using it should fail", desc: "Item 3387 / buff 3169, for reference.", confirmed: false }
+    ]
+  },
+  {
+    id: "mounts",
+    title: "4. No Mounts",
+    items: [
+      { id: "mt-debug", label: "Run /scroll testmount — the fail message and alert should appear", desc: "", confirmed: false },
+      { id: "mt-bagscan", label: "Pick up a mount item — no red error text should appear in chat", desc: "", confirmed: false },
+      { id: "mt-possess", label: "Have a mount item in your bags — you should get a warning, but the run should not fail yet", desc: "", confirmed: false },
+      { id: "mt-summon", label: "Actually mount up — the run should fail", desc: "", confirmed: false },
+      { id: "mt-swift", label: "Test at least one swift or epic mount specifically, and note exactly which one you used", desc: "Some mount IDs haven't been confirmed yet.", confirmed: false }
+    ]
+  },
+  {
+    id: "selfsuff",
+    title: "5. Self-Sufficient",
+    items: [
+      { id: "ss-debug", label: "Run /scroll testself — the fail message and alert should appear", desc: "", confirmed: true },
+      { id: "ss-vendor-errors", label: "Open a vendor window and browse its items — no red error text should appear in chat", desc: "", confirmed: true },
+      { id: "ss-vendor-loot-no-fail", label: "Loot a non-gear item (e.g. meat from an opened clam) while a vendor window happens to be open — the run should not fail just from that", desc: "Only weapon/armor-class items count — anything else appearing in your bags is fine.", confirmed: true },
+      { id: "ss-vendor-purchase-fail", label: "Have any new weapon or armor item appear in your bags while a vendor window is open — the run should fail", desc: "This now fails regardless of whether that vendor actually sells the item — any new gear item counts.", confirmed: true },
+      { id: "ss-buyback", label: "Sell a gear item to a vendor, then buy it back from them — the run should fail", desc: "Buying back your own previously-sold gear is no longer an exception.", confirmed: true }
+    ]
+  },
+  {
+    id: "worldbuffs",
+    title: "6. No World Buffs",
+    items: [
+      { id: "wb-debug", label: "Run /scroll testworldbuff — the fail message and alert should appear", desc: "", confirmed: false },
+      { id: "wb-overlay", label: "Get a banned world buff — a warning overlay should appear immediately", desc: "Songflower Serenade or a Sayge's Fortune buff are good candidates.", confirmed: false },
+      { id: "wb-grace-window", label: "Enter combat within the first 10 seconds of getting a banned world buff — the run should not fail yet", desc: "You're still inside the grace period at this point.", confirmed: false },
+      { id: "wb-grace-pass", label: "Stay out of combat for more than 10 seconds while buffed — the run should not fail as long as you remain out of combat", desc: "", confirmed: false },
+      { id: "wb-grace-fail", label: "Enter combat after the 10-second grace period has passed, while still buffed — the run should fail", desc: "", confirmed: false },
+      { id: "wb-id-check", label: "Note exactly which buff you tested", desc: "Buff IDs haven't all been confirmed yet, so this doubles as a check that the right buff is actually being detected.", confirmed: false }
+    ]
+  },
+  {
+    id: "teetotaler",
+    title: "7. Teetotaler",
+    items: [
+      { id: "tt-debug", label: "Run /scroll testteeto — the fail message and alert should appear", desc: "", confirmed: false },
+      { id: "tt-aura", label: "Drink a confirmed elixir, flask, or juju — the run should fail immediately", desc: "", confirmed: false },
+      { id: "tt-potion", label: "Use a healing or mana potion — the run should fail", desc: "If this doesn't fail, that's a real bug — please flag it clearly rather than just noting it in passing.", confirmed: false },
+      { id: "tt-oil", label: "Apply a weapon oil or stone (non-Rogue) — the run should fail", desc: "", confirmed: false },
+      { id: "tt-rogue-poison", label: "As a Rogue, apply a poison — the run should not fail", desc: "Poisons are an intended exception under Teetotaler, not a banned consumable.", confirmed: false }
+    ]
+  },
+  {
+    id: "carryover",
+    title: "8. Carryover Items",
+    items: [
+      { id: "co-dungeon-complete", label: "Kill a dungeon's final boss — it should mark that dungeon complete in your Dungeons tab", desc: "", confirmed: true },
+      { id: "co-outlevel", label: "Level up past a required boss's grey threshold before killing it — the run should fail", desc: "", confirmed: false },
+      { id: "co-minimap", label: "Check the minimap button — hovering should highlight it, and left-click should open the main window", desc: "", confirmed: false },
+      { id: "co-readycheck", label: "Check the Dungeons tab — completion icons should render properly, not as blank boxes", desc: "", confirmed: false }
+    ]
+  }
+];
+
+const IDENTITY_KEY = "sob-tester-identity";
+const STATE_KEY = "sob-tester-state";
+let identity = {};
+let state = {};
+
+function allItems() { return DATA.flatMap(s => s.items); }
+
+// ---- identity persistence ----
+function loadIdentity() {
+  try {
+    const raw = localStorage.getItem(IDENTITY_KEY);
+    identity = raw ? JSON.parse(raw) : {};
+  } catch (e) { identity = {}; }
+  document.getElementById("id-discord").value = identity.discord || "";
+  document.getElementById("id-race").value = identity.race || "";
+  document.getElementById("id-class").value = identity.charClass || "";
+  document.getElementById("id-level").value = identity.level || "";
+  document.getElementById("id-selffound").checked = !!identity.selfFound;
+}
+function saveIdentity() {
+  identity = {
+    discord: document.getElementById("id-discord").value.trim(),
+    race: document.getElementById("id-race").value,
+    charClass: document.getElementById("id-class").value,
+    level: document.getElementById("id-level").value,
+    selfFound: document.getElementById("id-selffound").checked
+  };
+  localStorage.setItem(IDENTITY_KEY, JSON.stringify(identity));
+}
+function identityComplete() {
+  return identity.discord && identity.race && identity.charClass;
+}
+
+// ---- item state persistence ----
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STATE_KEY);
+    state = raw ? JSON.parse(raw) : {};
+  } catch (e) { state = {}; }
+}
+function saveState() {
+  localStorage.setItem(STATE_KEY, JSON.stringify(state));
+}
+function getItemState(id) {
+  return state[id] || { status: "untested", description: "", errors: "", lastSubmittedAt: null };
+}
+
+function showSaved(msg, cls) {
+  const note = document.getElementById("save-note");
+  note.textContent = msg;
+  note.className = "save-note" + (cls ? " " + cls : "");
+  clearTimeout(showSaved._t);
+  showSaved._t = setTimeout(() => { note.textContent = "\u00A0"; note.className = "save-note"; }, 2500);
+}
+
+function updateProgress() {
+  const items = allItems();
+  const tested = items.filter(i => {
+    const st = getItemState(i.id).status;
+    return st === "pass" || st === "fail";
+  }).length;
+  const pct = items.length ? Math.round((tested / items.length) * 100) : 0;
+  document.getElementById("progress-fill").style.width = pct + "%";
+  document.getElementById("progress-text").textContent = `${tested} / ${items.length} tested`;
+}
+
+function updateSectionCount(sectionId) {
+  const section = DATA.find(s => s.id === sectionId);
+  const tested = section.items.filter(i => {
+    const st = getItemState(i.id).status;
+    return st === "pass" || st === "fail";
+  }).length;
+  const el = document.querySelector(`.section[data-section="${sectionId}"] .section-count`);
+  if (el) el.textContent = `${tested} / ${section.items.length} tested`;
+}
+
+function setStatus(itemId, status) {
+  const st = getItemState(itemId);
+  st.status = status;
+  state[itemId] = st;
+  saveState();
+}
+
+function render() {
+  const container = document.getElementById("sections");
+  container.innerHTML = "";
+  DATA.forEach(section => {
+    const secEl = document.createElement("div");
+    secEl.className = "section";
+    secEl.dataset.section = section.id;
+
+    const tested = section.items.filter(i => {
+      const s = getItemState(i.id).status;
+      return s === "pass" || s === "fail";
+    }).length;
+
+    const header = document.createElement("div");
+    header.className = "section-header";
+    header.innerHTML = `
+      <span class="section-title-wrap">
+        <span class="section-title">${section.title}</span>
+        <span class="section-count">${tested} / ${section.items.length} tested</span>
+      </span>
+      <span class="section-caret">&#9660;</span>
+    `;
+    header.addEventListener("click", () => secEl.classList.toggle("collapsed"));
+    secEl.appendChild(header);
+
+    const body = document.createElement("div");
+    body.className = "section-body";
+
+    section.items.forEach(item => {
+      const st = getItemState(item.id);
+      const itemEl = document.createElement("div");
+      itemEl.className = "item";
+      itemEl.dataset.item = item.id;
+
+      const top = document.createElement("div");
+      top.className = "item-top";
+
+      const labelWrap = document.createElement("div");
+      const label = document.createElement("span");
+      label.className = "item-label";
+      label.textContent = item.label;
+      labelWrap.appendChild(label);
+      if (item.confirmed) {
+        const badge = document.createElement("span");
+        badge.className = "badge-regression";
+        badge.textContent = "Regression check";
+        labelWrap.appendChild(badge);
+      }
+      if (item.desc) {
+        const desc = document.createElement("div");
+        desc.className = "item-desc";
+        desc.textContent = item.desc;
+        labelWrap.appendChild(desc);
+      }
+      top.appendChild(labelWrap);
+
+      const statusGroup = document.createElement("div");
+      statusGroup.className = "status-group";
+      ["untested", "pass", "fail"].forEach(s => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "status-btn" + (st.status === s ? " active-" + s : "");
+        btn.textContent = s === "untested" ? "Untested" : (s === "pass" ? "Pass" : "Fail");
+        btn.addEventListener("click", () => {
+          setStatus(item.id, s);
+          statusGroup.querySelectorAll(".status-btn").forEach(b => {
+            b.className = "status-btn";
+          });
+          btn.className = "status-btn active-" + s;
+          updateSectionCount(section.id);
+          updateProgress();
+        });
+        statusGroup.appendChild(btn);
+      });
+      top.appendChild(statusGroup);
+      itemEl.appendChild(top);
+
+      const fields = document.createElement("div");
+      fields.className = "item-fields";
+
+      const descField = document.createElement("div");
+      const descLabel = document.createElement("label");
+      descLabel.className = "field-label";
+      descLabel.textContent = "Describe what you were doing and what you observed";
+      const descArea = document.createElement("textarea");
+      descArea.className = "note";
+      descArea.placeholder = "What you did, in order, and what happened...";
+      descArea.value = st.description || "";
+      let descTimer;
+      descArea.addEventListener("input", () => {
+        clearTimeout(descTimer);
+        descTimer = setTimeout(() => {
+          const s2 = getItemState(item.id);
+          s2.description = descArea.value;
+          state[item.id] = s2;
+          saveState();
+          descArea.classList.remove("missing");
+        }, 300);
+      });
+      descField.appendChild(descLabel);
+      descField.appendChild(descArea);
+      fields.appendChild(descField);
+
+      const errField = document.createElement("div");
+      const errLabel = document.createElement("label");
+      errLabel.className = "field-label";
+      errLabel.textContent = "Enter any addon messages or Lua errors here";
+      const errArea = document.createElement("textarea");
+      errArea.className = "note error-field";
+      errArea.placeholder = "Paste chat output, /scroll dump, /scroll importcode, or error text...";
+      errArea.value = st.errors || "";
+      let errTimer;
+      errArea.addEventListener("input", () => {
+        clearTimeout(errTimer);
+        errTimer = setTimeout(() => {
+          const s2 = getItemState(item.id);
+          s2.errors = errArea.value;
+          state[item.id] = s2;
+          saveState();
+        }, 300);
+      });
+      errField.appendChild(errLabel);
+      errField.appendChild(errArea);
+      fields.appendChild(errField);
+
+      itemEl.appendChild(fields);
+      itemEl._descArea = descArea;
+      body.appendChild(itemEl);
+    });
+
+    const footer = document.createElement("div");
+    footer.className = "section-footer";
+    const msg = document.createElement("span");
+    msg.className = "section-status-msg";
+    msg.id = `msg-${section.id}`;
+    const submitBtn = document.createElement("button");
+    submitBtn.className = "tool primary";
+    submitBtn.textContent = "Submit this section";
+    submitBtn.addEventListener("click", () => submitSection(section.id));
+    footer.appendChild(msg);
+    footer.appendChild(submitBtn);
+    body.appendChild(footer);
+
+    secEl.appendChild(body);
+    container.appendChild(secEl);
+  });
+}
+
+async function submitSection(sectionId) {
+  const msgEl = document.getElementById(`msg-${sectionId}`);
+  const section = DATA.find(s => s.id === sectionId);
+
+  if (!identityComplete()) {
+    msgEl.textContent = "Please fill in your Discord handle, race, and class at the top before submitting.";
+    msgEl.className = "section-status-msg error";
+    return;
+  }
+
+  // Validate: any Fail item must have a description.
+  let missingItem = null;
+  section.items.forEach(item => {
+    const st = getItemState(item.id);
+    if (st.status === "fail" && !(st.description && st.description.trim())) {
+      missingItem = item;
+    }
+  });
+  if (missingItem) {
+    msgEl.textContent = `Please describe what happened for: ${missingItem.label}`;
+    msgEl.className = "section-status-msg error";
+    const itemEl = document.querySelector(`.item[data-item="${missingItem.id}"]`);
+    if (itemEl && itemEl._descArea) {
+      itemEl._descArea.classList.add("missing");
+      itemEl._descArea.focus();
+      if (typeof itemEl._descArea.scrollIntoView === "function") {
+        itemEl._descArea.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+    return;
+  }
+
+  const rows = [];
+  const now = new Date().toISOString();
+  section.items.forEach(item => {
+    const st = getItemState(item.id);
+    if (st.status === "pass" || st.status === "fail") {
+      rows.push({
+        discordHandle: identity.discord,
+        race: identity.race,
+        charClass: identity.charClass,
+        level: identity.level,
+        selfFound: identity.selfFound,
+        sectionTitle: section.title,
+        itemId: item.id,
+        itemLabel: item.label,
+        status: st.status,
+        description: st.description || "",
+        errors: st.errors || ""
+      });
+    }
+  });
+
+  if (rows.length === 0) {
+    msgEl.textContent = "Mark at least one item Pass or Fail before submitting.";
+    msgEl.className = "section-status-msg error";
+    return;
+  }
+
+  if (!CONFIG.ENDPOINT_URL || CONFIG.ENDPOINT_URL.indexOf("PASTE_YOUR") === 0) {
+    msgEl.textContent = "Submission endpoint isn't configured yet — nothing was sent.";
+    msgEl.className = "section-status-msg error";
+    return;
+  }
+
+  msgEl.textContent = "Submitting...";
+  msgEl.className = "section-status-msg";
+
+  try {
+    const res = await fetch(CONFIG.ENDPOINT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ rows })
+    });
+    let ok = res.ok;
+    try {
+      const data = await res.json();
+      ok = ok && data.ok !== false;
+    } catch (e) { /* response may not be JSON-readable cross-origin; res.ok is our fallback signal */ }
+
+    if (ok) {
+      section.items.forEach(item => {
+        const st = getItemState(item.id);
+        if (st.status === "pass" || st.status === "fail") {
+          st.lastSubmittedAt = now;
+          state[item.id] = st;
+        }
+      });
+      saveState();
+      msgEl.textContent = `Submitted ${rows.length} result(s) at ${new Date().toLocaleTimeString()}.`;
+      msgEl.className = "section-status-msg success";
+      showSaved("Section submitted.", "success");
+    } else {
+      msgEl.textContent = "Submission may have failed — check your connection and try again.";
+      msgEl.className = "section-status-msg error";
+    }
+  } catch (err) {
+    msgEl.textContent = "Couldn't reach the server — check your connection and try again.";
+    msgEl.className = "section-status-msg error";
+  }
+}
+
+// ---- toolbar ----
+document.getElementById("expand-all").addEventListener("click", () => {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("collapsed"));
+});
+document.getElementById("collapse-all").addEventListener("click", () => {
+  document.querySelectorAll(".section").forEach(s => s.classList.add("collapsed"));
+});
+document.getElementById("open-guide").addEventListener("click", () => {
+  document.getElementById("guide-modal").classList.add("open");
+});
+document.getElementById("close-guide").addEventListener("click", () => {
+  document.getElementById("guide-modal").classList.remove("open");
+});
+document.getElementById("guide-modal").addEventListener("click", (e) => {
+  if (e.target.id === "guide-modal") e.target.classList.remove("open");
+});
+
+// ---- identity field persistence ----
+["id-discord", "id-race", "id-class", "id-level", "id-selffound"].forEach(id => {
+  document.getElementById(id).addEventListener("change", saveIdentity);
+});
+document.getElementById("id-discord").addEventListener("input", () => {
+  clearTimeout(saveIdentity._t);
+  saveIdentity._t = setTimeout(saveIdentity, 400);
+});
+
+// ---- init ----
+loadIdentity();
+loadState();
+render();
+updateProgress();
+</script>
+</body>
+</html>
